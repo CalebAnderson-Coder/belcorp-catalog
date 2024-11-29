@@ -31,15 +31,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Cargar productos
     async function loadProducts() {
+        productsGrid.innerHTML = '<p class="loading">Cargando productos...</p>';
         try {
-            const response = await fetch('https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/js/products.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            products = Array.isArray(data) ? data : [];
+            // Usar productos locales en lugar de cargarlos desde GitHub
+            products = [
+                {
+                    "id": "LB001",
+                    "brand": "L'BEL",
+                    "name": "Crema Hidratante Aqua Complex",
+                    "category": "cuidado-facial",
+                    "description": "Crema hidratante de uso diario con tecnología Aqua Complex.",
+                    "price": 120000,
+                    "originalPrice": 150000,
+                    "image": "https://i.imgur.com/ZkBHxss.jpg",
+                    "stock": 50
+                },
+                {
+                    "id": "ES001",
+                    "brand": "Ésika",
+                    "name": "Labial Mate Hidratante",
+                    "category": "maquillaje",
+                    "description": "Labial de larga duración con acabado mate.",
+                    "price": 45000,
+                    "originalPrice": 55000,
+                    "image": "https://i.imgur.com/1XvJFbF.jpg",
+                    "stock": 100
+                },
+                {
+                    "id": "CZ001",
+                    "brand": "Cyzone",
+                    "name": "Máscara de Pestañas Volume",
+                    "category": "maquillaje",
+                    "description": "Máscara que multiplica el volumen de las pestañas.",
+                    "price": 35000,
+                    "originalPrice": 42000,
+                    "image": "https://i.imgur.com/QX7QaDf.jpg",
+                    "stock": 75
+                },
+                {
+                    "id": "LB002",
+                    "brand": "L'BEL",
+                    "name": "Perfume Magnifique",
+                    "category": "fragancias",
+                    "description": "Fragancia floral amaderada.",
+                    "price": 180000,
+                    "originalPrice": 220000,
+                    "image": "https://i.imgur.com/8tQ3mN5.jpg",
+                    "stock": 30
+                },
+                {
+                    "id": "ES002",
+                    "brand": "Ésika",
+                    "name": "Base Líquida HD",
+                    "category": "maquillaje",
+                    "description": "Base de alta cobertura con tecnología HD.",
+                    "price": 65000,
+                    "originalPrice": 80000,
+                    "image": "https://i.imgur.com/KZ1AhYd.jpg",
+                    "stock": 85
+                },
+                {
+                    "id": "CZ002",
+                    "brand": "Cyzone",
+                    "name": "Esmalte Larga Duración",
+                    "category": "unas",
+                    "description": "Esmalte de uñas con fórmula de larga duración.",
+                    "price": 25000,
+                    "originalPrice": 30000,
+                    "image": "https://i.imgur.com/VxBDvmB.jpg",
+                    "stock": 120
+                }
+            ];
             renderProducts();
-            updateCart(); // Actualizar carrito al cargar
+            updateCart();
         } catch (error) {
             console.error('Error loading products:', error);
             productsGrid.innerHTML = '<p class="error-message">Error al cargar los productos. Por favor, intenta más tarde.</p>';
