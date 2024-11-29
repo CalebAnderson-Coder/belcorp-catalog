@@ -7,7 +7,7 @@
         "description": "Crema hidratante de uso diario con tecnología Aqua Complex que mantiene la piel hidratada por 48 horas.",
         "price": 120000,
         "originalPrice": 150000,
-        "image": "./images/products/lbel-aqua-complex.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/lbel-aqua-complex.jpg",
         "stock": 50,
         "rating": 4.8,
         "reviews": 156
@@ -20,7 +20,7 @@
         "description": "Labial de larga duración con acabado mate y fórmula hidratante. Disponible en 12 tonos.",
         "price": 45000,
         "originalPrice": 55000,
-        "image": "./images/products/esika-labial-mate.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/esika-labial-mate.jpg",
         "stock": 100,
         "rating": 4.5,
         "reviews": 234
@@ -33,7 +33,7 @@
         "description": "Máscara que multiplica el volumen de las pestañas hasta 5 veces sin grumos.",
         "price": 35000,
         "originalPrice": 42000,
-        "image": "./images/products/cyzone-mascara.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/cyzone-mascara.jpg",
         "stock": 75,
         "rating": 4.7,
         "reviews": 189
@@ -46,7 +46,7 @@
         "description": "Fragancia floral amaderada con notas de jazmín, rosa y sándalo.",
         "price": 180000,
         "originalPrice": 220000,
-        "image": "./images/products/lbel-magnifique.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/lbel-magnifique.jpg",
         "stock": 30,
         "rating": 4.9,
         "reviews": 312
@@ -59,7 +59,7 @@
         "description": "Base de alta cobertura con tecnología HD para un acabado natural.",
         "price": 65000,
         "originalPrice": 80000,
-        "image": "./images/products/esika-base-hd.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/esika-base-hd.jpg",
         "stock": 85,
         "rating": 4.6,
         "reviews": 278
@@ -72,7 +72,7 @@
         "description": "Esmalte de uñas con fórmula de larga duración y secado rápido.",
         "price": 25000,
         "originalPrice": 30000,
-        "image": "./images/products/cyzone-esmalte.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/cyzone-esmalte.jpg",
         "stock": 120,
         "rating": 4.4,
         "reviews": 167
@@ -85,7 +85,7 @@
         "description": "Sérum concentrado con activos anti-edad y vitamina C.",
         "price": 150000,
         "originalPrice": 180000,
-        "image": "./images/products/lbel-serum-chronos.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/lbel-serum-chronos.jpg",
         "stock": 40,
         "rating": 4.8,
         "reviews": 198
@@ -98,7 +98,7 @@
         "description": "Crema corporal con manteca de karité y vitamina E.",
         "price": 55000,
         "originalPrice": 65000,
-        "image": "./images/products/esika-crema-corporal.jpg",
+        "image": "https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/products/esika-crema-corporal.jpg",
         "stock": 90,
         "rating": 4.7,
         "reviews": 145

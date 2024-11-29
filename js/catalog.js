@@ -25,15 +25,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentFilters = {
         brand: 'all',
         category: [],
-        priceRange: 1000,
+        priceRange: 1000000,
         searchTerm: ''
     };
 
     // Cargar productos
     async function loadProducts() {
         try {
-            const response = await fetch('./js/products.json');
-            products = await response.json();
+            const response = await fetch('https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/js/products.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            products = Array.isArray(data) ? data : [];
             renderProducts();
             updateCart(); // Actualizar carrito al cargar
         } catch (error) {
@@ -52,15 +56,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
         productsGrid.innerHTML = filteredProducts.map(product => `
             <div class="product-card" data-id="${product.id}">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/product-placeholder.svg'">
                 <div class="product-info">
                     <h3>${product.name}</h3>
                     <div class="product-brand">${product.brand}</div>
                     <div class="product-price">
-                        <span class="original-price">$${product.originalPrice.toFixed(2)}</span>
-                        <span class="discount-price">$${product.price.toFixed(2)}</span>
+                        <span class="original-price">$${(product.originalPrice || product.price).toLocaleString()}</span>
+                        <span class="discount-price">$${product.price.toLocaleString()}</span>
                     </div>
-                    <button class="add-to-cart" onclick="addToCart(${product.id})">
+                    <button class="add-to-cart" onclick="addToCart('${product.id}')">
                         <i class="fas fa-shopping-cart"></i>
                         Agregar al Carrito
                     </button>
@@ -72,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Filtrar productos
     function filterProducts() {
         return products.filter(product => {
-            const matchBrand = currentFilters.brand === 'all' || product.brand.toLowerCase() === currentFilters.brand;
+            const matchBrand = currentFilters.brand === 'all' || product.brand.toLowerCase() === currentFilters.brand.toLowerCase();
             const matchCategory = currentFilters.category.length === 0 || 
                                 currentFilters.category.includes(product.category);
             const matchPrice = product.price <= currentFilters.priceRange;
@@ -131,21 +135,21 @@ document.addEventListener('DOMContentLoaded', function() {
             ? '<p class="empty-cart">Tu carrito está vacío</p>'
             : cart.map(item => `
                 <div class="cart-item">
-                    <img src="${item.image}" alt="${item.name}" loading="lazy">
+                    <img src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.src='https://raw.githubusercontent.com/CalebAnderson-Coder/belcorp-catalog/gh-pages/images/product-placeholder.svg'">
                     <div class="item-details">
                         <h4>${item.name}</h4>
-                        <div class="item-price">$${item.price.toFixed(2)}</div>
+                        <div class="item-price">$${item.price.toLocaleString()}</div>
                         <div class="item-quantity">
-                            <button onclick="updateQuantity(${item.id}, -1)">
+                            <button onclick="updateQuantity('${item.id}', -1)">
                                 <i class="fas fa-minus"></i>
                             </button>
                             <span>${item.quantity}</span>
-                            <button onclick="updateQuantity(${item.id}, 1)">
+                            <button onclick="updateQuantity('${item.id}', 1)">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                    <button class="remove-item" onclick="removeFromCart(${item.id})">
+                    <button class="remove-item" onclick="removeFromCart('${item.id}')">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -153,8 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Actualizar totales
         const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-        document.querySelector('.subtotal .amount').textContent = `$${subtotal.toFixed(2)}`;
-        document.querySelector('.total .amount').textContent = `$${subtotal.toFixed(2)}`;
+        document.querySelector('.subtotal .amount').textContent = `$${subtotal.toLocaleString()}`;
+        document.querySelector('.total .amount').textContent = `$${subtotal.toLocaleString()}`;
 
         // Actualizar estado del botón de checkout
         checkoutButton.disabled = cart.length === 0;
@@ -217,20 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', () => {
             currentFilters.category = Array.from(categoryCheckboxes)
                 .filter(cb => cb.checked)
-                .map(cb => cb.id);
+                .map(cb => cb.value);
             renderProducts();
         });
-    });
-
-    checkoutButton.addEventListener('click', () => {
-        if (cart.length === 0) return;
-        
-        // Aquí iría la lógica de checkout
-        alert('¡Gracias por tu pedido! Pronto nos pondremos en contacto contigo.');
-        cart = [];
-        updateCart();
-        cartModal.classList.remove('open');
-        document.body.style.overflow = '';
     });
 
     // Inicializar
