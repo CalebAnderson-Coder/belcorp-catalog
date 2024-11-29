@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Digital Belcorp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/catalog.css">
+    <link rel="stylesheet" href="./css/product-card.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-left">
+            <img src="./images/logo.png" alt="Belcorp Logo" class="nav-logo">
+        </div>
+        <div class="nav-center">
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar productos...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button class="cart-button">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </button>
+            <div class="user-menu">
+                <img src="./images/user-avatar.png" alt="Usuario" class="user-avatar">
+                <span class="user-name">Consultora</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="brands-nav">
+        <button class="brand-button active" data-brand="all">Todos</button>
+        <button class="brand-button" data-brand="lbel">L'BEL</button>
+        <button class="brand-button" data-brand="esika">Ésika</button>
+        <button class="brand-button" data-brand="cyzone">Cyzone</button>
+    </div>
+
+    <main class="catalog-container">
+        <aside class="filters">
+            <h3>Filtros</h3>
+            <div class="filter-section">
+                <h4>Categorías</h4>
+                <ul>
+                    <li><input type="checkbox" id="makeup"> <label for="makeup">Maquillaje</label></li>
+                    <li><input type="checkbox" id="skincare"> <label for="skincare">Cuidado de la Piel</label></li>
+                    <li><input type="checkbox" id="fragrance"> <label for="fragrance">Fragancias</label></li>
+                    <li><input type="checkbox" id="body"> <label for="body">Cuidado Corporal</label></li>
+                </ul>
+            </div>
+            <div class="filter-section">
+                <h4>Precio</h4>
+                <div class="price-range">
+                    <input type="range" min="0" max="1000" value="500">
+                    <div class="price-inputs">
+                        <input type="number" placeholder="Min">
+                        <input type="number" placeholder="Max">
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="products-grid">
+            <!-- Los productos se cargarán dinámicamente aquí -->
+        </section>
+    </main>
+
+    <div class="cart-modal">
+        <div class="cart-header">
+            <h2>Tu Carrito</h2>
+            <button class="close-cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-content">
+            <div class="cart-items">
+                <!-- Los items del carrito se cargarán dinámicamente aquí -->
+            </div>
+            <div class="cart-summary">
+                <div class="subtotal">
+                    <span>Subtotal:</span>
+                    <span class="amount">$0.00</span>
+                </div>
+                <div class="shipping">
+                    <span>Envío:</span>
+                    <span class="amount">Gratis</span>
+                </div>
+                <div class="total">
+                    <span>Total:</span>
+                    <span class="amount">$0.00</span>
+                </div>
+                <button class="checkout-button">
+                    <i class="fas fa-shopping-bag"></i>
+                    Realizar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/catalog.js"></script>
+</body>
+</html>

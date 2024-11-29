@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Belcorp Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="images/logo.png" alt="Belcorp Logo" class="logo">
+        </div>
+        
+        <div class="welcome-text">
+            ¡Construye el negocio de tus sueños y gana con <b>L'BEL, ésika y Cyzone!</b>
+        </div>
+
+        <form id="loginForm" class="login-form">
+            <div class="country-select">
+                <select id="country" required>
+                    <option value="">Elige tu País</option>
+                    <option value="CO">Colombia</option>
+                    <option value="PE">Perú</option>
+                    <option value="MX">México</option>
+                    <option value="CL">Chile</option>
+                    <option value="EC">Ecuador</option>
+                    <!-- Otros países -->
+                </select>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Usuario o Correo Electrónico" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Contraseña" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit" class="login-button">INGRESA A TU CUENTA</button>
+
+            <div class="admin-login">
+                <a href="#">INGRESA COMO <strong>ADMINISTRADOR</strong></a>
+            </div>
+        </form>
+
+        <div class="privacy-policy">
+            <a href="#">PRIVACIDAD DE DATOS</a>
+        </div>
+    </div>
+
+    <script src="./js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+:root {
+    --primary-color: #e75480;
+    --secondary-color: #ff69b4;
+    --accent-color: #ff1493;
+    --text-color: #333333;
+    --background-color: #ffffff;
+    --error-color: #ff0000;
+    --success-color: #00ff00;
+    --border-color: #dddddd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Mulish', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-container {
+    background: var(--background-color);
+    border-radius: 10px;
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    max-width: 200px;
+    height: auto;
+}
+
+.welcome-text {
+    text-align: center;
+    color: var(--text-color);
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.country-select select,
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.country-select select:focus,
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.forgot-password {
+    text-align: right;
+}
+
+.forgot-password a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.login-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background: var(--secondary-color);
+}
+
+.admin-login {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.admin-login a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.privacy-policy {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.privacy-policy a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+    
+    .welcome-text {
+        font-size: 1em;
+    }
+    
+    .login-button {
+        padding: 12px;
+    }
+}
