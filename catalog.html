@@ -7,92 +7,112 @@
     <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="./css/catalog.css">
-    <link rel="stylesheet" href="./css/product-card.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-left">
-            <img src="./images/logo.png" alt="Belcorp Logo" class="nav-logo">
-        </div>
-        <div class="nav-center">
-            <div class="search-bar">
-                <input type="text" placeholder="Buscar productos...">
-                <button><i class="fas fa-search"></i></button>
+    <header>
+        <div class="header-top">
+            <div class="logo">
+                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/logo.png" alt="Belcorp">
+            </div>
+            <div class="header-actions">
+                <button class="cart-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="user-button">
+                    <i class="fas fa-user"></i>
+                </button>
             </div>
         </div>
-        <div class="nav-right">
-            <button class="cart-button">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count">0</span>
+        <nav class="brands-nav">
+            <button class="brand-button active" data-brand="all">
+                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/all.png" alt="Todas">
+                <span>Todas</span>
             </button>
-            <div class="user-menu">
-                <img src="./images/user-avatar.png" alt="Usuario" class="user-avatar">
-                <span class="user-name">Consultora</span>
-            </div>
-        </div>
-    </nav>
+            <button class="brand-button" data-brand="L'BEL">
+                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/lbel.png" alt="L'BEL">
+                <span>L'BEL</span>
+            </button>
+            <button class="brand-button" data-brand="Ésika">
+                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/esika.png" alt="Ésika">
+                <span>Ésika</span>
+            </button>
+            <button class="brand-button" data-brand="Cyzone">
+                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/cyzone.png" alt="Cyzone">
+                <span>Cyzone</span>
+            </button>
+        </nav>
+    </header>
 
-    <div class="brands-nav">
-        <button class="brand-button active" data-brand="all">Todos</button>
-        <button class="brand-button" data-brand="lbel">L'BEL</button>
-        <button class="brand-button" data-brand="esika">Ésika</button>
-        <button class="brand-button" data-brand="cyzone">Cyzone</button>
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Cargando productos...</p>
     </div>
 
-    <main class="catalog-container">
-        <aside class="filters">
-            <h3>Filtros</h3>
-            <div class="filter-section">
-                <h4>Categorías</h4>
-                <ul>
-                    <li><input type="checkbox" id="makeup"> <label for="makeup">Maquillaje</label></li>
-                    <li><input type="checkbox" id="skincare"> <label for="skincare">Cuidado de la Piel</label></li>
-                    <li><input type="checkbox" id="fragrance"> <label for="fragrance">Fragancias</label></li>
-                    <li><input type="checkbox" id="body"> <label for="body">Cuidado Corporal</label></li>
-                </ul>
+    <!-- Error Message -->
+    <div id="error-message" class="error-message" style="display: none;"></div>
+
+    <main>
+        <div class="filters-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar productos...">
             </div>
-            <div class="filter-section">
-                <h4>Precio</h4>
-                <div class="price-range">
-                    <input type="range" min="0" max="1000" value="500">
-                    <div class="price-inputs">
-                        <input type="number" placeholder="Min">
-                        <input type="number" placeholder="Max">
+            <div class="filter-options">
+                <div class="filter-group">
+                    <h3>Categorías</h3>
+                    <div class="categories">
+                        <label>
+                            <input type="checkbox" value="maquillaje"> Maquillaje
+                        </label>
+                        <label>
+                            <input type="checkbox" value="fragancias"> Fragancias
+                        </label>
+                        <label>
+                            <input type="checkbox" value="cuidado-facial"> Cuidado Facial
+                        </label>
+                        <label>
+                            <input type="checkbox" value="cuidado-corporal"> Cuidado Corporal
+                        </label>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h3>Precio</h3>
+                    <input type="range" min="0" max="250000" value="250000" class="price-range">
+                    <div class="price-labels">
+                        <span>$0</span>
+                        <span>$250.000</span>
                     </div>
                 </div>
             </div>
-        </aside>
+        </div>
 
-        <section class="products-grid">
-            <!-- Los productos se cargarán dinámicamente aquí -->
-        </section>
+        <div class="products-grid"></div>
     </main>
 
     <div class="cart-modal">
-        <div class="cart-header">
-            <h2>Tu Carrito</h2>
-            <button class="close-cart"><i class="fas fa-times"></i></button>
-        </div>
         <div class="cart-content">
-            <div class="cart-items">
-                <!-- Los items del carrito se cargarán dinámicamente aquí -->
+            <div class="cart-header">
+                <h2>Tu Carrito</h2>
+                <button class="close-cart">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="cart-summary">
-                <div class="subtotal">
-                    <span>Subtotal:</span>
-                    <span class="amount">$0.00</span>
+            <div class="cart-items"></div>
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <div class="subtotal">
+                        <span>Subtotal:</span>
+                        <span class="amount">$0</span>
+                    </div>
+                    <div class="total">
+                        <span>Total:</span>
+                        <span class="amount">$0</span>
+                    </div>
                 </div>
-                <div class="shipping">
-                    <span>Envío:</span>
-                    <span class="amount">Gratis</span>
-                </div>
-                <div class="total">
-                    <span>Total:</span>
-                    <span class="amount">$0.00</span>
-                </div>
-                <button class="checkout-button">
-                    <i class="fas fa-shopping-bag"></i>
-                    Realizar Pedido
+                <button class="checkout-button" disabled>
+                    Finalizar Pedido
                 </button>
             </div>
         </div>
