@@ -1,17 +1,46 @@
-# Python
+# Dependencias
+node_modules/
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
 
-# Virtual Environment
-venv/
-env/
-ENV/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
+# Archivos del sistema
 .DS_Store
-Thumbs.db
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos generados
+dist/
+build/
+*.pyo
+*.pyd
+.Python
+env/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg

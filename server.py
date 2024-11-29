@@ -1,14 +1,25 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import os
 
-# Cambiar al directorio public
-os.chdir('public')
+class CORSRequestHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET')
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+        return super().end_headers()
 
-# Configuración del servidor
-HOST = 'localhost'
-PORT = 8082
+    def do_GET(self):
+        # Servir index.html para la ruta raíz
+        if self.path == '/':
+            self.path = '/index.html'
+        return SimpleHTTPRequestHandler.do_GET(self)
 
-print('Servidor iniciado en http://{}:{}'.format(HOST, PORT))
-server_address = (HOST, PORT)
-httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
-httpd.serve_forever()
+def run(server_class=HTTPServer, handler_class=CORSRequestHandler, port=8000):
+    server_address = ('', port)
+    httpd = server_class(server_address, handler_class)
+    print(f"Servidor iniciado en http://localhost:{port}")
+    httpd.serve_forever()
+
+if __name__ == '__main__':
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    run()

@@ -1,107 +1,100 @@
-[
-  {
-    "id": 1,
-    "name": "Labial Hidratante L'Bel Color Intenso",
-    "price": 45000,
-    "image": "https://via.placeholder.com/200x200.png?text=Labial",
-    "category": "Maquillaje"
-  },
-  {
-    "id": 2,
-    "name": "Perfume Floral Esika Primavera",
-    "price": 120000,
-    "image": "https://via.placeholder.com/200x200.png?text=Perfume",
-    "category": "Fragancias"
-  },
-  {
-    "id": 3,
-    "name": "Crema Facial Cyzone Anti-acné",
-    "price": 65000,
-    "image": "https://via.placeholder.com/200x200.png?text=Crema",
-    "category": "Cuidado Personal"
-  },
-  {
-    "id": 4,
-    "name": "Base Líquida L'Bel HD Mate",
-    "price": 85000,
-    "image": "https://via.placeholder.com/200x200.png?text=Base",
-    "category": "Maquillaje"
-  },
-  {
-    "id": 5,
-    "name": "Perfume Masculino L'Bel Intense",
-    "price": 140000,
-    "image": "https://via.placeholder.com/200x200.png?text=PerfumeH",
-    "category": "Fragancias"
-  },
-  {
-    "id": 6,
-    "name": "Shampoo Revitalizante Esika Pro",
-    "price": 35000,
-    "image": "https://via.placeholder.com/200x200.png?text=Shampoo",
-    "category": "Cuidado Personal"
-  },
-  {
-    "id": 7,
-    "name": "Máscara de Pestañas L'Bel Volume",
-    "price": 55000,
-    "image": "https://via.placeholder.com/200x200.png?text=Mascara",
-    "category": "Maquillaje"
-  },
-  {
-    "id": 8,
-    "name": "Perfume Cyzone Teen Spirit",
-    "price": 75000,
-    "image": "https://via.placeholder.com/200x200.png?text=PerfumeJ",
-    "category": "Fragancias"
-  },
-  {
-    "id": 9,
-    "name": "Crema Corporal Esika Coco",
-    "price": 42000,
-    "image": "https://via.placeholder.com/200x200.png?text=CremaCorp",
-    "category": "Cuidado Personal"
-  },
-  {
-    "id": 10,
-    "name": "Delineador Líquido L'Bel Pro",
-    "price": 38000,
-    "image": "https://via.placeholder.com/200x200.png?text=Delineador",
-    "category": "Maquillaje"
-  },
-  {
-    "id": 11,
-    "name": "Perfume Femenino L'Bel Paris",
-    "price": 160000,
-    "image": "https://via.placeholder.com/200x200.png?text=PerfumeM",
-    "category": "Fragancias"
-  },
-  {
-    "id": 12,
-    "name": "Jabón Facial Cyzone Clean",
-    "price": 28000,
-    "image": "https://via.placeholder.com/200x200.png?text=Jabon",
-    "category": "Cuidado Personal"
-  },
-  {
-    "id": 13,
-    "name": "Paleta de Sombras Esika Pro",
-    "price": 95000,
-    "image": "https://via.placeholder.com/200x200.png?text=Sombras",
-    "category": "Maquillaje"
-  },
-  {
-    "id": 14,
-    "name": "Perfume Unisex L'Bel Fresh",
-    "price": 110000,
-    "image": "https://via.placeholder.com/200x200.png?text=PerfumeU",
-    "category": "Fragancias"
-  },
-  {
-    "id": 15,
-    "name": "Acondicionador Esika Repair",
-    "price": 32000,
-    "image": "https://via.placeholder.com/200x200.png?text=Acondicionador",
-    "category": "Cuidado Personal"
-  }
-]
+{
+    "products": [
+        {
+            "id": "LB001",
+            "brand": "L'Bel",
+            "name": "Crema Hidratante Aqua Complex",
+            "category": "cuidado-facial",
+            "description": "Crema hidratante de uso diario con tecnología Aqua Complex que mantiene la piel hidratada por 48 horas.",
+            "price": 120000,
+            "image": "/images/products/lbel/aqua-complex.jpg",
+            "stock": 50,
+            "rating": 4.8,
+            "reviews": 156
+        },
+        {
+            "id": "ES001",
+            "brand": "Ésika",
+            "name": "Labial Mate Hidratante",
+            "category": "maquillaje",
+            "description": "Labial de larga duración con acabado mate y fórmula hidratante. Disponible en 12 tonos.",
+            "price": 45000,
+            "image": "/images/products/esika/labial-mate.jpg",
+            "stock": 100,
+            "rating": 4.5,
+            "reviews": 234
+        },
+        {
+            "id": "CZ001",
+            "brand": "Cyzone",
+            "name": "Máscara de Pestañas Extra Volume",
+            "category": "maquillaje",
+            "description": "Máscara que multiplica el volumen de las pestañas hasta 5 veces sin grumos.",
+            "price": 35000,
+            "image": "/images/products/cyzone/mascara-volume.jpg",
+            "stock": 75,
+            "rating": 4.7,
+            "reviews": 189
+        },
+        {
+            "id": "LB002",
+            "brand": "L'Bel",
+            "name": "Perfume Magnifique",
+            "category": "fragancias",
+            "description": "Fragancia floral amaderada con notas de jazmín, rosa y sándalo.",
+            "price": 180000,
+            "image": "/images/products/lbel/magnifique.jpg",
+            "stock": 30,
+            "rating": 4.9,
+            "reviews": 312
+        },
+        {
+            "id": "ES002",
+            "brand": "Ésika",
+            "name": "Base Líquida HD",
+            "category": "maquillaje",
+            "description": "Base de alta cobertura con tecnología HD para un acabado natural.",
+            "price": 65000,
+            "image": "/images/products/esika/base-hd.jpg",
+            "stock": 85,
+            "rating": 4.6,
+            "reviews": 278
+        },
+        {
+            "id": "CZ002",
+            "brand": "Cyzone",
+            "name": "Esmalte Larga Duración",
+            "category": "unas",
+            "description": "Esmalte de uñas con fórmula de larga duración y secado rápido.",
+            "price": 25000,
+            "image": "/images/products/cyzone/esmalte.jpg",
+            "stock": 120,
+            "rating": 4.4,
+            "reviews": 167
+        },
+        {
+            "id": "LB003",
+            "brand": "L'Bel",
+            "name": "Sérum Anti-edad Chronos",
+            "category": "cuidado-facial",
+            "description": "Sérum concentrado con activos anti-edad y vitamina C.",
+            "price": 150000,
+            "image": "/images/products/lbel/serum-chronos.jpg",
+            "stock": 40,
+            "rating": 4.8,
+            "reviews": 198
+        },
+        {
+            "id": "ES003",
+            "brand": "Ésika",
+            "name": "Crema Corporal Hidratante",
+            "category": "cuidado-corporal",
+            "description": "Crema corporal con manteca de karité y vitamina E.",
+            "price": 55000,
+            "image": "/images/products/esika/crema-corporal.jpg",
+            "stock": 90,
+            "rating": 4.7,
+            "reviews": 145
+        }
+    ]
+}

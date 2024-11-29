@@ -4,127 +4,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo Digital Belcorp</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#e75480">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <img src="images/logo.png" alt="Belcorp">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-category="all">Todo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-category="maquillaje">
+                                <i class="fas fa-magic"></i> Maquillaje
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-category="fragancias">
+                                <i class="fas fa-spray-can"></i> Fragancias
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-category="cuidado-facial">
+                                <i class="fas fa-face-smile"></i> Cuidado Facial
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-category="cuidado-corporal">
+                                <i class="fas fa-pump-soap"></i> Cuidado Corporal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-category="unas">
+                                <i class="fas fa-hand-sparkles"></i> Uñas
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <div class="search-box me-3">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Buscar productos...">
+                        </div>
+                        <button id="cartButton" class="btn btn-outline-primary position-relative" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span id="carrito-contador" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Banner -->
+    <section class="banner mt-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1>Catálogo Digital</h1>
+                    <p class="lead">Descubre nuestra colección completa de productos</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="images/banner.jpg" alt="Banner" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos -->
+    <section class="productos py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Productos Destacados</h2>
+            <div id="productos-destacados" class="row">
+                <!-- Los productos se cargarán dinámicamente aquí -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal del Carrito -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mi Carrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- El contenido del carrito se cargará dinámicamente aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="shareCart">
+                        <i class="fab fa-whatsapp"></i> Compartir por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificación del Carrito -->
+    <div id="cartNotification" class="cart-notification">
+        Producto agregado al carrito
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Belcorp Digital Catalog</h5>
+                    <p>Tu herramienta digital para ventas más efectivas</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/cart.js"></script>
+    
+    <!-- Service Worker -->
     <script>
-        // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('ServiceWorker registration successful');
+                        console.log('Service Worker registrado');
                     })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
+                    .catch(error => {
+                        console.error('Error al registrar Service Worker:', error);
                     });
             });
         }
-    </script>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">Belcorp Digital</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" id="showAll">Todos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-category="Maquillaje">Maquillaje</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-category="Fragancias">Fragancias</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" data-category="Cuidado Personal">Cuidado Personal</a>
-                    </li>
-                </ul>
-                <button class="btn btn-light" id="cartButton">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span id="cartCount">0</span>
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar productos...">
-                </div>
-            </div>
-        </div>
-
-        <div class="row" id="products"></div>
-    </div>
-
-    <!-- Cart Modal -->
-    <div class="modal fade" id="cartModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Carrito de Compras</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="cartItems"></div>
-                    <div class="text-end mt-3">
-                        <h5>Total COP: $<span id="cartTotalCOP">0</span></h5>
-                        <h5>Total USD: $<span id="cartTotalUSD">0</span></h5>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" id="shareWhatsApp">
-                        <i class="fab fa-whatsapp"></i> Compartir por WhatsApp
-                    </button>
-                    <button type="button" class="btn btn-primary" id="exportExcel">
-                        <i class="fas fa-file-excel"></i> Exportar a Excel
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Offline Alert -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="offlineToast" class="toast" role="alert">
-            <div class="toast-header bg-warning">
-                <strong class="me-auto">Estado de Conexión</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">
-                Estás trabajando en modo offline. Algunas funciones pueden no estar disponibles.
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/cart.js"></script>
-    
-    <script>
-        // Offline detection
-        const offlineToast = new bootstrap.Toast(document.getElementById('offlineToast'));
-        
-        window.addEventListener('online', () => {
-            offlineToast.hide();
-        });
-        
-        window.addEventListener('offline', () => {
-            offlineToast.show();
-        });
     </script>
 </body>
 </html>

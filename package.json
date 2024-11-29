@@ -1,0 +1,41 @@
+{
+    "name": "belcorp-catalog",
+    "version": "1.0.0",
+    "description": "Catálogo digital para consultoras de Belcorp",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js",
+        "generate-icons": "node scripts/generate-icons.js",
+        "build": "npm run generate-icons"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "compression": "^1.7.4",
+        "cors": "^2.8.5",
+        "helmet": "^7.1.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2",
+        "sharp": "^0.33.1"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CalebAnderson-Coder/belcorp-catalog.git"
+    },
+    "keywords": [
+        "belcorp",
+        "catalog",
+        "ecommerce",
+        "pwa"
+    ],
+    "author": "Caleb Anderson",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/CalebAnderson-Coder/belcorp-catalog/issues"
+    },
+    "homepage": "https://github.com/CalebAnderson-Coder/belcorp-catalog#readme"
+}
