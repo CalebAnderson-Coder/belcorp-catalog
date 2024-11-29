@@ -1,0 +1,268 @@
+:root {
+    --primary-color: #e75480;
+    --secondary-color: #ff69b4;
+    --background-color: #f8f9fa;
+    --text-color: #333;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+#app {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Header */
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.cart-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: relative;
+}
+
+#cartCount {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
+/* Categories */
+.categories {
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+.categories button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.categories button.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+    margin-bottom: 20px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 0.8rem;
+}
+
+.product-name {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    font-weight: bold;
+}
+
+.price-cop {
+    color: var(--text-color);
+}
+
+.price-usd {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+.price-tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.add-to-cart {
+    width: 100%;
+    padding: 0.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    transition: background-color 0.2s;
+}
+
+.add-to-cart:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Cart Overlay */
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+}
+
+.cart-overlay.hidden {
+    display: none;
+}
+
+.cart-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border-radius: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.cart-item {
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-total {
+    margin: 1rem 0;
+    font-weight: bold;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-control button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#whatsapp-button, #excel-button {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#whatsapp-button {
+    background: #25D366;
+    color: white;
+}
+
+#excel-button {
+    background: #217346;
+    color: white;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .product-image {
+        height: 150px;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+}
