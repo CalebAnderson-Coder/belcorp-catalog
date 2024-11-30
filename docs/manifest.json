@@ -1,0 +1,18 @@
+{
+  "name": "Belcorp Catálogo Digital",
+  "short_name": "Belcorp",
+  "theme_color": "#4a90e2",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "./",
+  "start_url": "./",
+  "icons": [
+    {
+      "src": "images/icons/icon-144x144.svg",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

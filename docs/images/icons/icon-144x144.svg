@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
+    <rect width="144" height="144" fill="#4a90e2"/>
+    <style>
+        .text { font-family: Arial, sans-serif; font-size: 36px; fill: white; text-anchor: middle; }
+    </style>
+    <text x="72" y="82" class="text">BELCORP</text>
+</svg>
