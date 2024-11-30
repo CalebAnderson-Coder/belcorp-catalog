@@ -2,122 +2,113 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo Digital Belcorp</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="./css/catalog.css">
+    <title>Catálogo Digital Belcorp - Precios en USD</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="header-top">
-            <div class="logo">
-                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/logo.png" alt="Belcorp">
-            </div>
-            <div class="header-actions">
-                <button class="cart-button">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </button>
-                <button class="user-button">
-                    <i class="fas fa-user"></i>
-                </button>
-            </div>
-        </div>
-        <nav class="brands-nav">
-            <button class="brand-button active" data-brand="all">
-                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/all.png" alt="Todas">
-                <span>Todas</span>
-            </button>
-            <button class="brand-button" data-brand="L'BEL">
-                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/lbel.png" alt="L'BEL">
-                <span>L'BEL</span>
-            </button>
-            <button class="brand-button" data-brand="Ésika">
-                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/esika.png" alt="Ésika">
-                <span>Ésika</span>
-            </button>
-            <button class="brand-button" data-brand="Cyzone">
-                <img src="https://catalogodigital.somosbelcorp.com/CO/assets/images/brands/cyzone.png" alt="Cyzone">
-                <span>Cyzone</span>
-            </button>
-        </nav>
-    </header>
+    <iframe id="catalogFrame" src="https://catalogodigital.somosbelcorp.com/CO?consultant=OTkwNzQ5NzcyNg==" frameborder="0"></iframe>
+    <script>
+        // Esperar a que el iframe cargue
+        document.getElementById('catalogFrame').onload = function() {
+            const frame = this;
+            try {
+                // Inyectar el código de conversión en el iframe
+                const script = frame.contentWindow.document.createElement('script');
+                script.textContent = `
+                    // Configuración
+                    const CONFIG = {
+                        TASA_CAMBIO: 3100,
+                        PORCENTAJE_NORMAL: 0.40,
+                        PORCENTAJE_PESO_ALTO: 0.80,
+                        LIMITE_PESO_ML: 700
+                    };
 
-    <!-- Loading Overlay -->
-    <div id="loading" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p>Cargando productos...</p>
-    </div>
+                    // Función para convertir precios a dólares
+                    function convertirADolares(precioEnPesos, pesoEnMl = 0) {
+                        const precioBaseDolares = precioEnPesos / CONFIG.TASA_CAMBIO;
+                        const porcentaje = (pesoEnMl > CONFIG.LIMITE_PESO_ML) ? 
+                            CONFIG.PORCENTAJE_PESO_ALTO : 
+                            CONFIG.PORCENTAJE_NORMAL;
+                        const precioFinal = precioBaseDolares + (precioBaseDolares * porcentaje);
+                        return Math.round(precioFinal * 100) / 100;
+                    }
 
-    <!-- Error Message -->
-    <div id="error-message" class="error-message" style="display: none;"></div>
+                    // Función para extraer el peso del producto
+                    function extraerPesoProducto(descripcion) {
+                        const match = descripcion.match(/(\d+)\\s*ml/i);
+                        return match ? parseInt(match[1]) : 0;
+                    }
 
-    <main>
-        <div class="filters-section">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar productos...">
-            </div>
-            <div class="filter-options">
-                <div class="filter-group">
-                    <h3>Categorías</h3>
-                    <div class="categories">
-                        <label>
-                            <input type="checkbox" value="maquillaje"> Maquillaje
-                        </label>
-                        <label>
-                            <input type="checkbox" value="fragancias"> Fragancias
-                        </label>
-                        <label>
-                            <input type="checkbox" value="cuidado-facial"> Cuidado Facial
-                        </label>
-                        <label>
-                            <input type="checkbox" value="cuidado-corporal"> Cuidado Corporal
-                        </label>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <h3>Precio</h3>
-                    <input type="range" min="0" max="250000" value="250000" class="price-range">
-                    <div class="price-labels">
-                        <span>$0</span>
-                        <span>$250.000</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    // Forzar vista móvil
+                    const userAgent = 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36';
+                    Object.defineProperty(navigator, 'userAgent', {
+                        get: function () { return userAgent; }
+                    });
 
-        <div class="products-grid"></div>
-    </main>
+                    // Observer para detectar y modificar los precios
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.type === 'childList' || mutation.type === 'characterData') {
+                                const precios = document.querySelectorAll('.product-price, .price');
+                                precios.forEach((elemento) => {
+                                    if (!elemento.hasAttribute('data-converted')) {
+                                        const textoOriginal = elemento.textContent;
+                                        const precioNumerico = parseFloat(textoOriginal.replace(/[^\\d]/g, ''));
+                                        
+                                        if (!isNaN(precioNumerico)) {
+                                            const descripcionProducto = elemento.closest('.product-item')?.querySelector('.product-description')?.textContent || '';
+                                            const pesoProducto = extraerPesoProducto(descripcionProducto);
+                                            
+                                            const precioDolares = convertirADolares(precioNumerico, pesoProducto);
+                                            elemento.textContent = '$' + precioDolares.toFixed(2) + ' USD';
+                                            elemento.setAttribute('data-converted', 'true');
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    });
 
-    <div class="cart-modal">
-        <div class="cart-content">
-            <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <button class="close-cart">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="cart-items"></div>
-            <div class="cart-footer">
-                <div class="cart-summary">
-                    <div class="subtotal">
-                        <span>Subtotal:</span>
-                        <span class="amount">$0</span>
-                    </div>
-                    <div class="total">
-                        <span>Total:</span>
-                        <span class="amount">$0</span>
-                    </div>
-                </div>
-                <button class="checkout-button" disabled>
-                    Finalizar Pedido
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="./js/catalog.js"></script>
+                    // Iniciar observación cuando el documento esté listo
+                    document.addEventListener('DOMContentLoaded', () => {
+                        observer.observe(document.body, {
+                            childList: true,
+                            subtree: true,
+                            characterData: true
+                        });
+                        
+                        // Conversión inicial
+                        const precios = document.querySelectorAll('.product-price, .price');
+                        precios.forEach((elemento) => {
+                            const textoOriginal = elemento.textContent;
+                            const precioNumerico = parseFloat(textoOriginal.replace(/[^\\d]/g, ''));
+                            
+                            if (!isNaN(precioNumerico)) {
+                                const descripcionProducto = elemento.closest('.product-item')?.querySelector('.product-description')?.textContent || '';
+                                const pesoProducto = extraerPesoProducto(descripcionProducto);
+                                
+                                const precioDolares = convertirADolares(precioNumerico, pesoProducto);
+                                elemento.textContent = '$' + precioDolares.toFixed(2) + ' USD';
+                                elemento.setAttribute('data-converted', 'true');
+                            }
+                        });
+                    });
+                `;
+                frame.contentWindow.document.head.appendChild(script);
+            } catch (error) {
+                console.error('Error al inyectar el script:', error);
+            }
+        };
+    </script>
 </body>
 </html>

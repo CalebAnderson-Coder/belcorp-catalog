@@ -26,6 +26,14 @@ const checkoutButton = document.querySelector('.checkout-button');
 const priceRangeInput = document.querySelector('.price-range');
 const categoryCheckboxes = document.querySelectorAll('.categories input[type="checkbox"]');
 
+// Configuración
+const CONFIG = {
+    TASA_CAMBIO: 3100,
+    PORCENTAJE_NORMAL: 0.40,
+    PORCENTAJE_PESO_ALTO: 0.80,
+    LIMITE_PESO_ML: 700
+};
+
 // Funciones de utilidad
 const formatPrice = (price) => {
     return new Intl.NumberFormat('es-CO', {
@@ -39,6 +47,68 @@ const formatPrice = (price) => {
 const calculateDiscount = (originalPrice, currentPrice) => {
     return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
 };
+
+// Función para convertir precios a dólares
+function convertirADolares(precioEnPesos, pesoEnMl = 0) {
+    // Convertir precio base a dólares
+    const precioBaseDolares = precioEnPesos / CONFIG.TASA_CAMBIO;
+    
+    // Determinar el porcentaje a aplicar según el peso
+    const porcentaje = (pesoEnMl > CONFIG.LIMITE_PESO_ML) ? 
+        CONFIG.PORCENTAJE_PESO_ALTO : 
+        CONFIG.PORCENTAJE_NORMAL;
+    
+    // Calcular precio final con el porcentaje
+    const precioFinal = precioBaseDolares + (precioBaseDolares * porcentaje);
+    
+    // Redondear a 2 decimales
+    return Math.round(precioFinal * 100) / 100;
+}
+
+// Función para extraer el peso del producto
+function extraerPesoProducto(descripcion) {
+    const match = descripcion.match(/(\d+)\s*ml/i);
+    return match ? parseInt(match[1]) : 0;
+}
+
+// Observer para detectar y modificar los precios
+const observerConfig = {
+    childList: true,
+    subtree: true,
+    characterData: true
+};
+
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.type === 'childList' || mutation.type === 'characterData') {
+            const precios = document.querySelectorAll('.product-price, .price');
+            precios.forEach((elemento) => {
+                if (!elemento.hasAttribute('data-converted')) {
+                    const textoOriginal = elemento.textContent;
+                    const precioNumerico = parseFloat(textoOriginal.replace(/[^\d]/g, ''));
+                    
+                    if (!isNaN(precioNumerico)) {
+                        // Obtener el peso del producto desde la descripción más cercana
+                        const descripcionProducto = elemento.closest('.product-item')?.querySelector('.product-description')?.textContent || '';
+                        const pesoProducto = extraerPesoProducto(descripcionProducto);
+                        
+                        const precioDolares = convertirADolares(precioNumerico, pesoProducto);
+                        elemento.textContent = `$${precioDolares.toFixed(2)} USD`;
+                        elemento.setAttribute('data-converted', 'true');
+                    }
+                }
+            });
+        }
+    });
+});
+
+// Forzar vista móvil
+function forzarVistaMobile() {
+    const userAgent = 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36';
+    Object.defineProperty(navigator, 'userAgent', {
+        get: function () { return userAgent; }
+    });
+}
 
 // Funciones de la API
 async function fetchProducts() {
@@ -306,5 +376,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkoutButton.addEventListener('click', () => {
         // Implementar proceso de checkout
         alert('Función de checkout en desarrollo');
+    });
+
+    // Forzar vista móvil
+    forzarVistaMobile();
+    
+    // Comenzar a observar cambios en el DOM
+    observer.observe(document.body, observerConfig);
+    
+    // Realizar la conversión inicial
+    const precios = document.querySelectorAll('.product-price, .price');
+    precios.forEach((elemento) => {
+        const textoOriginal = elemento.textContent;
+        const precioNumerico = parseFloat(textoOriginal.replace(/[^\d]/g, ''));
+        
+        if (!isNaN(precioNumerico)) {
+            const descripcionProducto = elemento.closest('.product-item')?.querySelector('.product-description')?.textContent || '';
+            const pesoProducto = extraerPesoProducto(descripcionProducto);
+            
+            const precioDolares = convertirADolares(precioNumerico, pesoProducto);
+            elemento.textContent = `$${precioDolares.toFixed(2)} USD`;
+            elemento.setAttribute('data-converted', 'true');
+        }
     });
 });
