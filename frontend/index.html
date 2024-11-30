@@ -133,7 +133,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/belcorp-catalog/sw.js')
+                navigator.serviceWorker.register('./sw.js', { scope: '/belcorp-catalog/' })
                     .then(registration => {
                         console.log('Service Worker registrado con éxito:', registration);
                     })
