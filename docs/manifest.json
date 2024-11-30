@@ -5,11 +5,11 @@
   "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "portrait",
-  "scope": "./",
-  "start_url": "./",
+  "scope": "/belcorp-catalog/",
+  "start_url": "/belcorp-catalog/",
   "icons": [
     {
-      "src": "images/icons/icon-144x144.svg",
+      "src": "/belcorp-catalog/images/icons/icon-144x144.svg",
       "sizes": "144x144",
       "type": "image/svg+xml",
       "purpose": "any"
