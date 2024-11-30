@@ -1,22 +1,24 @@
 .catalog-card {
-    transition: transform 0.2s;
-    cursor: pointer;
     position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    height: 400px;
     overflow: hidden;
+    border: none;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .catalog-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
 .catalog-image {
     width: 100%;
-    height: 300px;
+    height: 100%;
     object-fit: cover;
-    border-radius: 10px 10px 0 0;
+    transition: transform 0.3s ease;
 }
 
 .catalog-overlay {
@@ -24,73 +26,82 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
     padding: 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
     color: white;
+    text-align: center;
 }
 
-.modal-xl {
-    max-width: 95% !important;
+.catalog-overlay h5 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
-#pdfViewer {
-    width: 100%;
-    height: 80vh;
-    overflow: auto;
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 5px;
+.catalog-overlay p {
+    margin: 10px 0 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
 }
 
-.pdf-page {
-    margin: 10px auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    background: white;
+/* Estilos del navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+/* Estilos del carrito */
+.cart-count {
+    position: relative;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    margin-right: -10px;
+    z-index: 1;
+}
+
+/* Estilos del visor PDF */
 .pdf-controls {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     padding: 10px;
-    background: #f8f9fa;
+    background-color: #f8f9fa;
     border-radius: 5px;
 }
 
-.zoom-controls {
-    display: inline-flex;
-    align-items: center;
+.pdf-page {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
-.cart-count {
-    position: relative;
-    background: #ff4444;
-    color: white;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
+#pdfViewer {
+    overflow-x: auto;
+    text-align: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
 }
 
+/* Estilos del carrito */
 .cart-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.cart-item:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .cart-item-info {
     flex-grow: 1;
-    margin-right: 10px;
 }
 
 .cart-item-actions {
@@ -106,19 +117,19 @@
 }
 
 .quantity-control button {
-    width: 25px;
-    height: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: #f8f9fa;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 0 5px;
+    border: 1px solid #dee2e6;
+    background: none;
+    border-radius: 3px;
 }
 
-.quantity-control button:hover {
-    background: #e9ecef;
+.quantity-control span {
+    min-width: 20px;
+    text-align: center;
+}
+
+.modal-xl {
+    max-width: 95% !important;
 }
 
 @media (max-width: 768px) {
