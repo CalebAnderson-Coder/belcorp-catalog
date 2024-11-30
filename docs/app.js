@@ -13,21 +13,21 @@ const catalogs = [
         id: 1,
         name: 'Catálogo Cyzone',
         filename: 'Cy Zone C01.pdf',
-        image: 'assets/cyzone.jpg',
+        image: 'assets/cyzone.svg',
         url: 'pdfs/Cy Zone C01.pdf'
     },
     {
         id: 2,
         name: 'Catálogo Ésika',
         filename: 'ESika C01.pdf',
-        image: 'assets/esika.jpg',
+        image: 'assets/esika.svg',
         url: 'pdfs/ESika C01.pdf'
     },
     {
         id: 3,
         name: 'Catálogo L\'Bel',
         filename: 'LBel C01.pdf',
-        image: 'assets/lbel.jpg',
+        image: 'assets/lbel.svg',
         url: 'pdfs/LBel C01.pdf'
     }
 ];

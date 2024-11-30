@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="600" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#4a90e2"/>
+    <style>
+        .title { font-family: Arial, sans-serif; font-size: 48px; fill: white; text-anchor: middle; }
+        .subtitle { font-family: Arial, sans-serif; font-size: 24px; fill: white; text-anchor: middle; }
+    </style>
+    <text x="200" y="280" class="title">ÉSIKA</text>
+    <text x="200" y="320" class="subtitle">Catálogo C01</text>
+</svg>
