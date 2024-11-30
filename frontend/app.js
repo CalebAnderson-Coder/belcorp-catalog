@@ -13,22 +13,22 @@ const catalogs = [
         id: 1,
         name: 'Catálogo Cyzone',
         filename: 'cyzonec1.pdf',
-        image: 'assets/cyzone.jpeg',
-        url: 'pdfs/cyzonec1.pdf'
+        image: './assets/cyzone.jpeg',
+        url: './pdfs/cyzonec1.pdf'
     },
     {
         id: 2,
         name: 'Catálogo Ésika',
         filename: 'ESIKA 1C.pdf',
-        image: 'assets/esika.jpeg',
-        url: 'pdfs/ESIKA 1C.pdf'
+        image: './assets/esika.jpeg',
+        url: './pdfs/ESIKA 1C.pdf'
     },
     {
         id: 3,
         name: 'Catálogo L\'BEL',
         filename: 'lbelc1.pdf',
-        image: 'assets/lbel.jpeg',
-        url: 'pdfs/lbelc1.pdf'
+        image: './assets/lbel.jpeg',
+        url: './pdfs/lbelc1.pdf'
     }
 ];
 
@@ -47,9 +47,9 @@ function loadCatalogs() {
         
         card.innerHTML = `
             <img src="${catalog.image}" class="catalog-image" alt="${catalog.name}">
-            <div class="catalog-overlay">
+            <div class="card-body">
                 <h5 class="card-title">${catalog.name}</h5>
-                <p class="card-text">Click para ver el catálogo</p>
+                <button class="btn btn-primary">Ver Catálogo</button>
             </div>
         `;
         
@@ -58,31 +58,28 @@ function loadCatalogs() {
     });
 }
 
-// Abrir PDF en el visor
+// Función para abrir PDF
 async function openPDF(url, title) {
-    const modal = new bootstrap.Modal(document.getElementById('pdfModal'));
-    modal.show();
-    
-    document.querySelector('.modal-title').textContent = title;
-    
     try {
-        // Asegurarse de que la URL sea correcta
-        const pdfUrl = url.startsWith('/') ? url.substring(1) : url;
-        console.log('Intentando cargar PDF desde:', pdfUrl);
+        const loadingIndicator = document.getElementById('loading');
+        loadingIndicator.style.display = 'block';
         
-        const loadingTask = pdfjsLib.getDocument(pdfUrl);
-        console.log('Tarea de carga creada');
+        const modal = new bootstrap.Modal(document.getElementById('pdfModal'));
+        modal.show();
+        
+        document.querySelector('.modal-title').textContent = title;
+        
+        const loadingTask = pdfjsLib.getDocument(url);
         currentPDF = await loadingTask.promise;
-        console.log('PDF cargado exitosamente');
-        currentPage = 1;
-        currentZoom = 1.0;
         
-        renderPage(1);
+        currentPage = 1;
+        await renderPage(currentPage);
         updatePageInfo();
+        
+        loadingIndicator.style.display = 'none';
     } catch (error) {
-        console.error('Error loading PDF:', error);
-        console.error('URL intentada:', url);
-        alert('Error al cargar el catálogo. Por favor, intenta de nuevo.');
+        console.error('Error al cargar el PDF:', error);
+        alert('Error al cargar el catálogo. Por favor, intente nuevamente.');
     }
 }
 
@@ -90,10 +87,10 @@ async function openPDF(url, title) {
 async function renderPage(pageNumber) {
     try {
         const page = await currentPDF.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: currentZoom });
-        
-        const canvas = document.createElement('canvas');
+        const canvas = document.getElementById('pdfCanvas');
         const context = canvas.getContext('2d');
+        
+        const viewport = page.getViewport({ scale: currentZoom });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
         
@@ -103,49 +100,33 @@ async function renderPage(pageNumber) {
         };
         
         await page.render(renderContext).promise;
-        
-        const pdfViewer = document.getElementById('pdfViewer');
-        pdfViewer.innerHTML = '';
-        canvas.className = 'pdf-page';
-        pdfViewer.appendChild(canvas);
-        
-        updatePageInfo();
-        
     } catch (error) {
-        console.error('Error rendering page:', error);
-        alert('Error al mostrar la página. Por favor, intenta de nuevo.');
+        console.error('Error al renderizar la página:', error);
     }
 }
 
 // Actualizar información de página
 function updatePageInfo() {
-    document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${currentPDF.numPages}`;
-    document.getElementById('zoomInfo').textContent = `${Math.round(currentZoom * 100)}%`;
+    document.getElementById('currentPage').textContent = currentPage;
+    document.getElementById('totalPages').textContent = currentPDF.numPages;
 }
 
-// Navegación de páginas
-function prevPage() {
+// Navegación entre páginas
+document.getElementById('prevPage').addEventListener('click', () => {
     if (currentPage > 1) {
         currentPage--;
         renderPage(currentPage);
+        updatePageInfo();
     }
-}
+});
 
-function nextPage() {
+document.getElementById('nextPage').addEventListener('click', () => {
     if (currentPage < currentPDF.numPages) {
         currentPage++;
         renderPage(currentPage);
+        updatePageInfo();
     }
-}
-
-// Control de zoom
-function changeZoom(delta) {
-    const newZoom = currentZoom + delta;
-    if (newZoom >= 0.5 && newZoom <= 3.0) {
-        currentZoom = newZoom;
-        renderPage(currentPage);
-    }
-}
+});
 
 // Funciones del carrito
 function addToCart(productId, name, price) {
