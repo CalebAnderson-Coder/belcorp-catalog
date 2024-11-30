@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="50" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .text { font-family: Arial, sans-serif; font-size: 24px; fill: #ffffff; }
+    </style>
+    <text x="10" y="35" class="text">BELCORP</text>
+</svg>
