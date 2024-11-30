@@ -12,23 +12,23 @@ const catalogs = [
     {
         id: 1,
         name: 'Catálogo Cyzone',
-        filename: 'Cy Zone C01.pdf',
-        image: 'assets/cyzone.jpg',
-        url: 'pdfs/Cy Zone C01.pdf'
+        filename: 'cyzonec1.pdf',
+        image: 'assets/cyzone.jpeg',
+        url: 'pdfs/cyzonec1.pdf'
     },
     {
         id: 2,
         name: 'Catálogo Ésika',
-        filename: 'ESika C01.pdf',
-        image: 'assets/esika.jpg',
-        url: 'pdfs/ESika C01.pdf'
+        filename: 'ESIKA 1C.pdf',
+        image: 'assets/esika.jpeg',
+        url: 'pdfs/ESIKA 1C.pdf'
     },
     {
         id: 3,
-        name: 'Catálogo L\'Bel',
-        filename: 'LBel C01.pdf',
-        image: 'assets/lbel.jpg',
-        url: 'pdfs/LBel C01.pdf'
+        name: 'Catálogo L\'BEL',
+        filename: 'lbelc1.pdf',
+        image: 'assets/lbel.jpeg',
+        url: 'pdfs/lbelc1.pdf'
     }
 ];
 
@@ -40,15 +40,20 @@ function loadCatalogs() {
     catalogs.forEach(catalog => {
         const col = document.createElement('div');
         col.className = 'col-md-4 mb-4';
-        col.innerHTML = `
-            <div class="card catalog-card" onclick="openPDF('${catalog.url}', '${catalog.name}')">
-                <img src="${catalog.image}" class="catalog-image" alt="${catalog.name}">
-                <div class="catalog-overlay">
-                    <h5 class="card-title">${catalog.name}</h5>
-                    <p class="card-text">Click para ver el catálogo</p>
-                </div>
+        
+        const card = document.createElement('div');
+        card.className = 'card catalog-card';
+        card.addEventListener('click', () => openPDF(catalog.url, catalog.name));
+        
+        card.innerHTML = `
+            <img src="${catalog.image}" class="catalog-image" alt="${catalog.name}">
+            <div class="catalog-overlay">
+                <h5 class="card-title">${catalog.name}</h5>
+                <p class="card-text">Click para ver el catálogo</p>
             </div>
         `;
+        
+        col.appendChild(card);
         catalogList.appendChild(col);
     });
 }
@@ -61,8 +66,14 @@ async function openPDF(url, title) {
     document.querySelector('.modal-title').textContent = title;
     
     try {
-        const loadingTask = pdfjsLib.getDocument(url);
+        // Asegurarse de que la URL sea correcta
+        const pdfUrl = url.startsWith('/') ? url.substring(1) : url;
+        console.log('Intentando cargar PDF desde:', pdfUrl);
+        
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        console.log('Tarea de carga creada');
         currentPDF = await loadingTask.promise;
+        console.log('PDF cargado exitosamente');
         currentPage = 1;
         currentZoom = 1.0;
         
@@ -70,6 +81,7 @@ async function openPDF(url, title) {
         updatePageInfo();
     } catch (error) {
         console.error('Error loading PDF:', error);
+        console.error('URL intentada:', url);
         alert('Error al cargar el catálogo. Por favor, intenta de nuevo.');
     }
 }
