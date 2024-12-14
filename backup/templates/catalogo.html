@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo {{ catalog }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .catalog-viewer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .catalog-pages {
+            position: relative;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .catalog-page {
+            display: none;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .catalog-page.active {
+            display: block;
+        }
+
+        .side-nav {
+            background: #f8f9fa;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .side-nav:hover {
+            background: #e9ecef;
+        }
+
+        .cart-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+            color: #333;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .add-product-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .add-product-button:hover {
+            background: #45a049;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 5vh auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .submit-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+        }
+
+        .submit-button:hover {
+            background: #45a049;
+        }
+
+        /* Estilos para el select múltiple */
+        .multiselect-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .multiselect-selected {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            background: white;
+            min-height: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .multiselect-selected:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .multiselect-selected.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .selected-item {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .selected-item .remove {
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .multiselect-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .multiselect-options.show {
+            display: block;
+        }
+
+        .multiselect-option {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .multiselect-option:hover {
+            background: #f5f5f5;
+        }
+
+        .multiselect-option.selected {
+            background: #e8f5e9;
+        }
+
+        .placeholder {
+            color: #999;
+        }
+
+        /* Estilos para el modal del carrito */
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .cart-content {
+            position: relative;
+            background-color: white;
+            margin: 5vh auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .cart-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-header h2 {
+            margin: 0;
+            color: #4CAF50;
+        }
+
+        .cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+        }
+
+        .cart-item-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quantity-btn {
+            background: #f5f5f5;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .cart-item-price {
+            font-weight: bold;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .cart-item-remove {
+            color: #ff4444;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-top: 2px solid #eee;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cart-action-button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .cart-submit {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .cart-submit:hover {
+            background: #45a049;
+        }
+
+        .cart-cancel {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .cart-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        /* Estilos adicionales para el formulario del carrito */
+        .cart-header {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            margin: -20px -20px 20px -20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .cart-header h2 {
+            color: white;
+            margin: 0;
+        }
+
+        .cart-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .cart-form-title {
+            font-size: 1.2em;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-row label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .form-row input,
+        .form-row select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+        }
+
+        .phone-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .phone-prefix {
+            background: #f5f5f5;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .cart-item {
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item:hover {
+            background: #f5f5f5;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+
+        .cart-submit {
+            background: linear-gradient(to bottom right, #4CAF50, #45a049);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .cart-submit:hover {
+            background: linear-gradient(to bottom right, #45a049, #3d8b40);
+            transform: translateY(-1px);
+        }
+
+        .cart-submit:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cart-content {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Volver a Catálogos</a>
+    
+    <a href="/index.html" class="cart-button">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </a>
+
+    <div class="catalog-viewer">
+        <button class="side-nav" onclick="prevPage()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <div class="catalog-pages">
+            {% for page in pages %}
+            <img src="{{ page }}" alt="Página {{ loop.index }}" class="catalog-page {% if loop.first %}active{% endif %}" data-page="{{ loop.index }}">
+            {% endfor %}
+        </div>
+        
+        <button class="side-nav" onclick="nextPage()">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <button class="add-product-button" onclick="addToCart()">
+        <i class="fas fa-plus"></i>
+        Agregar Producto
+    </button>
+
+    <!-- Modal para agregar producto -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Producto</h2>
+                <button class="close-button" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="productForm" onsubmit="submitProduct(event)">
+                <div class="form-group">
+                    <label for="code">Código:</label>
+                    <input type="text" id="code" placeholder="Ingresa el código" required>
+                </div>
+                <div class="form-group">
+                    <label for="product">Producto:</label>
+                    <input type="text" id="product" placeholder="Ingresa el nombre del producto" required>
+                </div>
+                <div class="form-group">
+                    <label for="catalog">Catálogo:</label>
+                    <div class="multiselect-container">
+                        <div class="multiselect-selected" tabindex="0">
+                            <span class="placeholder">Selecciona los catálogos</span>
+                        </div>
+                        <div class="multiselect-options">
+                            <div class="multiselect-option" data-value="esika">Esika</div>
+                            <div class="multiselect-option" data-value="lebel">Lebel</div>
+                            <div class="multiselect-option" data-value="cyzone">CyZone</div>
+                            <div class="multiselect-option" data-value="yanbal">Yanbal</div>
+                            <div class="multiselect-option" data-value="natura">Natura</div>
+                            <div class="multiselect-option" data-value="avon">Avon</div>
+                            <div class="multiselect-option" data-value="avon_home">Avon Home</div>
+                        </div>
+                        <input type="hidden" id="catalog" name="catalog" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="package">Empaque:</label>
+                    <select id="package" required>
+                        <option value="">Selecciona el tipo de empaque</option>
+                        <option value="unidad">Unidad</option>
+                        <option value="kit">Kit</option>
+                        <option value="incluye">Incluye</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="price">Precio:</label>
+                    <input type="number" id="price" placeholder="Ingresa el precio" required min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Cantidad:</label>
+                    <input type="number" id="quantity" placeholder="Ingresa la cantidad" required min="1">
+                </div>
+                <button type="submit" class="submit-button">Agregar Producto</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal del carrito -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Carrito de Compras</h2>
+                <button class="close-button" onclick="closeCartModal()" style="color: white;">&times;</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Los items del carrito se insertarán aquí -->
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <form id="cartForm" class="cart-form" onsubmit="submitOrder(event)">
+                <div class="cart-form-title">Información de Contacto</div>
+                <div class="form-row">
+                    <label for="clientName">Nombre:</label>
+                    <input type="text" id="clientName" required placeholder="Ingresa tu nombre completo">
+                    <div class="error-message" id="nameError">Por favor ingresa tu nombre</div>
+                </div>
+                <div class="form-row">
+                    <label for="zone">Zona:</label>
+                    <select id="zone" required>
+                        <option value="">Selecciona tu zona</option>
+                        <option value="valencia">Valencia</option>
+                        <option value="caracas">Caracas</option>
+                        <option value="maracay">Maracay</option>
+                        <option value="turmero">Turmero</option>
+                        <option value="la_victoria">La Victoria</option>
+                    </select>
+                    <div class="error-message" id="zoneError">Por favor selecciona una zona</div>
+                </div>
+                <div class="form-row">
+                    <label for="phone">Teléfono:</label>
+                    <div class="phone-input">
+                        <span class="phone-prefix">+58</span>
+                        <input type="tel" id="phone" required placeholder="412-1234567" pattern="[0-9]{3}-[0-9]{7}">
+                    </div>
+                    <div class="error-message" id="phoneError">Ingresa un número válido (ej: 412-1234567)</div>
+                </div>
+                <div class="cart-actions">
+                    <button type="button" class="cart-action-button cart-cancel" onclick="closeCartModal()">Seguir Comprando</button>
+                    <button type="submit" class="cart-action-button cart-submit">Realizar Pedido</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Inicialización del carrito
+        let cart = [];
+        let currentPage = 1;
+        const totalPages = {{ pages|length }};
+        let cartCount = 0;
+
+        function updateImage() {
+            document.querySelectorAll('.catalog-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${currentPage}"]`).classList.add('active');
+            updateButtons();
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updateImage();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updateImage();
+            }
+        }
+
+        function updateButtons() {
+            document.querySelector('.side-nav:first-child').style.visibility = currentPage === 1 ? 'hidden' : 'visible';
+            document.querySelector('.side-nav:last-child').style.visibility = currentPage === totalPages ? 'hidden' : 'visible';
+        }
+
+        function addToCart() {
+            document.getElementById('addProductModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('addProductModal').style.display = 'none';
+        }
+
+        function submitProduct(event) {
+            event.preventDefault();
+            
+            const code = document.getElementById('code').value;
+            const product = document.getElementById('product').value;
+            const catalogs = document.getElementById('catalog').value.split(',').filter(Boolean);
+            const package = document.getElementById('package').value;
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (catalogs.length === 0) {
+                alert('Por favor selecciona al menos un catálogo');
+                return;
+            }
+
+            // Crear objeto del producto
+            const newProduct = {
+                id: Date.now(), // ID único para el producto
+                code,
+                name: product,
+                catalogs,
+                package,
+                price,
+                quantity
+            };
+
+            // Agregar al carrito
+            cart.push(newProduct);
+            updateCartCount();
+            
+            // Cerrar el modal y limpiar el formulario
+            closeModal();
+            document.getElementById('productForm').reset();
+            document.querySelector('.multiselect-selected').innerHTML = '<span class="placeholder">Selecciona los catálogos</span>';
+            document.querySelectorAll('.multiselect-option').forEach(option => option.classList.remove('selected'));
+            
+            // Mostrar mensaje de éxito
+            alert('Producto agregado al carrito');
+        }
+
+        function updateCartCount() {
+            cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = cartCount;
+        }
+
+        function openCartModal() {
+            document.getElementById('cartModal').style.display = 'block';
+            updateCartDisplay();
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">No hay productos en el carrito</div>';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <span class="cart-item-name">${item.name}</span>
+                        <span class="cart-item-details">
+                            Código: ${item.code}<br>
+                            Catálogos: ${item.catalogs.join(', ')}<br>
+                            Empaque: ${item.package}
+                        </span>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                    </div>
+                    <span class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+                    <span class="cart-item-remove" onclick="removeFromCart(${item.id})">&times;</span>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function updateQuantity(id, change) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                const newQuantity = item.quantity + change;
+                if (newQuantity > 0) {
+                    item.quantity = newQuantity;
+                    updateCartCount();
+                    updateCartDisplay();
+                }
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartCount();
+            updateCartDisplay();
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const name = document.getElementById('clientName').value.trim();
+            const zone = document.getElementById('zone').value;
+            const phone = document.getElementById('phone').value;
+            const phonePattern = /^\d{3}-\d{7}$/;
+
+            // Validar nombre
+            if (!name) {
+                document.getElementById('nameError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('nameError').classList.remove('show');
+            }
+
+            // Validar zona
+            if (!zone) {
+                document.getElementById('zoneError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('zoneError').classList.remove('show');
+            }
+
+            // Validar teléfono
+            if (!phonePattern.test(phone)) {
+                document.getElementById('phoneError').classList.add('show');
+                isValid = false;
+            } else {
+                document.getElementById('phoneError').classList.remove('show');
+            }
+
+            return isValid;
+        }
+
+        function submitOrder(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+
+            if (cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+
+            const orderData = {
+                items: cart,
+                clientName: document.getElementById('clientName').value.trim(),
+                zone: document.getElementById('zone').value,
+                phone: '+58-' + document.getElementById('phone').value,
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+
+            try {
+                // Guardar los datos del pedido en localStorage
+                localStorage.setItem('currentOrder', JSON.stringify(orderData));
+                
+                // Redireccionar a la página de pedidos
+                window.location.href = '/static/index.html';
+            } catch (error) {
+                console.error('Error al guardar el pedido:', error);
+                alert('Hubo un error al procesar el pedido. Por favor intenta nuevamente.');
+            }
+        }
+
+        // Formato automático del teléfono
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 3) {
+                value = value.substring(0, 3) + '-' + value.substring(3, 10);
+            }
+            e.target.value = value;
+        });
+
+        // Modificar el evento del carrito para abrir el modal
+        document.querySelector('.cart-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            openCartModal();
+        });
+
+        // Cerrar el modal del carrito al hacer clic fuera
+        window.onclick = function(event) {
+            const cartModal = document.getElementById('cartModal');
+            const addProductModal = document.getElementById('addProductModal');
+            if (event.target == cartModal) {
+                closeCartModal();
+            } else if (event.target == addProductModal) {
+                closeModal();
+            }
+        }
+
+        // Multiselect functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const multiselect = document.querySelector('.multiselect-selected');
+            const options = document.querySelector('.multiselect-options');
+            const hiddenInput = document.querySelector('input[name="catalog"]');
+            const selectedValues = new Set();
+
+            function updateSelectedDisplay() {
+                const selectedContainer = multiselect.querySelector('.selected-items') || document.createElement('div');
+                selectedContainer.className = 'selected-items';
+                selectedContainer.innerHTML = '';
+
+                if (selectedValues.size === 0) {
+                    multiselect.innerHTML = '<span class="placeholder">Selecciona los catálogos</span>';
+                    hiddenInput.value = '';
+                } else {
+                    multiselect.innerHTML = '';
+                    selectedValues.forEach(value => {
+                        const item = document.createElement('span');
+                        item.className = 'selected-item';
+                        item.innerHTML = `${value}<span class="remove">&times;</span>`;
+                        
+                        item.querySelector('.remove').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectedValues.delete(value);
+                            const option = document.querySelector(`.multiselect-option[data-value="${value.toLowerCase().replace(' ', '_')}"]`);
+                            option.classList.remove('selected');
+                            updateSelectedDisplay();
+                        });
+
+                        selectedContainer.appendChild(item);
+                    });
+                    multiselect.appendChild(selectedContainer);
+                    hiddenInput.value = Array.from(selectedValues).join(',');
+                }
+            }
+
+            multiselect.addEventListener('click', () => {
+                const isActive = options.classList.contains('show');
+                options.classList.toggle('show');
+                multiselect.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.multiselect-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const value = option.textContent;
+                    
+                    if (selectedValues.has(value)) {
+                        selectedValues.delete(value);
+                        option.classList.remove('selected');
+                    } else {
+                        selectedValues.add(value);
+                        option.classList.add('selected');
+                    }
+                    
+                    updateSelectedDisplay();
+                });
+            });
+
+            // Cerrar al hacer clic fuera
+            document.addEventListener('click', (e) => {
+                if (!multiselect.contains(e.target)) {
+                    options.classList.remove('show');
+                    multiselect.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

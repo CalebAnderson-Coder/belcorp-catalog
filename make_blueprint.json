@@ -1,0 +1,80 @@
+{
+    "name": "Pedidos a Google Sheets",
+    "flow": {
+        "nodes": [
+            {
+                "id": "webhook",
+                "module": "webhook:CustomWebhook",
+                "metadata": {
+                    "name": "Recibir Pedido",
+                    "instant": true
+                },
+                "spec": {
+                    "method": "POST",
+                    "dataStructure": {
+                        "fecha": {
+                            "type": "text",
+                            "required": true
+                        },
+                        "nombre_cliente": {
+                            "type": "text",
+                            "required": true
+                        },
+                        "telefono": {
+                            "type": "text",
+                            "required": true
+                        },
+                        "productos": {
+                            "type": "array",
+                            "spec": {
+                                "type": "collection",
+                                "spec": {
+                                    "nombre": {
+                                        "type": "text",
+                                        "required": true
+                                    },
+                                    "cantidad": {
+                                        "type": "number",
+                                        "required": true
+                                    },
+                                    "precio": {
+                                        "type": "number",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        },
+                        "total": {
+                            "type": "number",
+                            "required": true
+                        }
+                    }
+                }
+            },
+            {
+                "id": "google_sheets",
+                "module": "google-sheets:appendRow",
+                "metadata": {
+                    "name": "Agregar a Google Sheets"
+                },
+                "spec": {
+                    "spreadsheet": "C1-2025. PLANTILLA PARA PEDIDOS BELCORP Y YANBAL 13",
+                    "worksheet": "Pedidos",
+                    "mapping": {
+                        "Fecha": "{{webhook.data.fecha}}",
+                        "Cliente": "{{webhook.data.nombre_cliente}}",
+                        "Teléfono": "{{webhook.data.telefono}}",
+                        "Productos": "{{join(map(webhook.data.productos, function(item) {return item.nombre + ' (' + item.cantidad + ')'}), ', ')}}",
+                        "Total": "{{webhook.data.total}}"
+                    }
+                }
+            }
+        ],
+        "connections": [
+            {
+                "from": "webhook",
+                "to": "google_sheets"
+            }
+        ]
+    }
+}

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .cart-header h1 {
+            margin: 0;
+            color: #333;
+        }
+
+        .back-button {
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .back-button:hover {
+            color: #333;
+        }
+
+        .cart-items {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 1fr 120px 120px 120px 50px;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-details h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .item-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .editable-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .editable-field input {
+            width: 100px;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .editable-field input:focus {
+            border-color: #6c5ce7;
+            outline: none;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ff4444;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(255, 68, 68, 0.1);
+            transform: scale(1.1);
+        }
+
+        .cart-footer {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .cart-total {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            text-align: right;
+        }
+
+        .submit-order-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-order-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .submit-order-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-order-btn i {
+            font-size: 18px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .empty-cart i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .cart-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .editable-field {
+                justify-content: flex-start;
+            }
+        }
+
+        /* Estilos para el modal de confirmación */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .confirmation-modal {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .confirmation-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header.warning {
+            background-color: #ff9800;
+            color: white;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header.warning i {
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .warning-message {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .review-btn, .confirm-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .review-btn {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .confirm-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .review-btn:hover, .confirm-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <div class="cart-header">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Catálogo
+            </a>
+            <h1>Tu Carrito</h1>
+        </div>
+
+        {% if cart %}
+        <div class="cart-items">
+            {% for item in cart %}
+            <div class="cart-item" data-index="{{ loop.index0 }}">
+                <div class="item-details">
+                    <h3>{{ item.descripcion }}</h3>
+                    <p>Catálogo: {{ item.catalogo }}</p>
+                    <p>Zona: {{ item.zona }}</p>
+                    <p>Vendedora: {{ item.vendedora }}</p>
+                    <p>Empaque: {{ item.empaque }}</p>
+                </div>
+                <div class="editable-field">
+                    <input type="text" class="codigo-input" value="{{ item.codigo }}" 
+                           placeholder="Código" data-field="codigo">
+                </div>
+                <div class="editable-field">
+                    <input type="number" class="cantidad-input" value="{{ item.cantidad }}" 
+                           min="1" data-field="cantidad">
+                </div>
+                <div class="editable-field">
+                    <input type="number" class="precio-input" value="{{ item.precio }}" 
+                           step="0.01" min="0" data-field="precio">
+                </div>
+                <button class="delete-btn" onclick="removeItem({{ loop.index0 }})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="cart-footer">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required class="form-control">
+            </div>
+            <div class="cart-total">
+                <h2>Total: $<span id="cartTotal">0.00</span></h2>
+            </div>
+            <button id="submitOrderBtn" class="submit-order-btn">
+                <i class="fas fa-paper-plane"></i>
+                Enviar Pedido
+            </button>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Tu carrito está vacío</h2>
+            <p>Vuelve al catálogo para agregar productos</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="modal">
+        <div class="confirmation-modal">
+            <div class="modal-header warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>¡Atención!</h2>
+            </div>
+            <div class="modal-body">
+                <p class="warning-message">
+                    Recuerda verificar tu pedido, pues irá directamente a ser procesado.
+                    <strong>Si cometes un error con el código tú te haces responsable.</strong>
+                </p>
+                <div class="confirmation-buttons">
+                    <button class="review-btn" onclick="closeConfirmationModal()">
+                        <i class="fas fa-search"></i>
+                        Revisar mi Pedido
+                    </button>
+                    <button id="confirmOrderBtn" class="confirm-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Enviar Pedido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar el total del carrito
+        function updateTotal() {
+            const items = document.querySelectorAll('.cart-item');
+            let total = 0;
+            
+            items.forEach(item => {
+                const cantidad = parseFloat(item.querySelector('.cantidad-input').value) || 0;
+                const precio = parseFloat(item.querySelector('.precio-input').value) || 0;
+                total += cantidad * precio;
+            });
+            
+            document.getElementById('cartTotal').textContent = total.toFixed(2);
+        }
+
+        // Funciones para el modal de confirmación
+        function showConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.style.display = 'flex';
+            // Forzar un reflow
+            modal.offsetHeight;
+            modal.classList.add('active');
+        }
+
+        function closeConfirmationModal() {
+            const modal = document.getElementById('confirmationModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        async function submitOrder() {
+            try {
+                const nombre = document.getElementById('nombre').value;
+                if (!nombre) {
+                    alert('Por favor ingrese su nombre');
+                    return;
+                }
+
+                // Obtener los items del carrito
+                const items = document.querySelectorAll('.cart-item');
+                const pedidos = Array.from(items).map(item => ({
+                    nombre: nombre,
+                    producto: item.querySelector('.item-details h3').textContent,
+                    cantidad: parseInt(item.querySelector('.cantidad-input').value),
+                    precio: parseFloat(item.querySelector('.precio-input').value)
+                }));
+
+                // Mostrar modal de confirmación
+                showConfirmationModal();
+
+                // Agregar event listener al botón de confirmar
+                document.getElementById('confirmOrderBtn').onclick = async () => {
+                    closeConfirmationModal();
+                    
+                    // Enviar al servidor
+                    const response = await fetch('/api/submit-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ pedido: pedidos })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('Pedido enviado con éxito');
+                        window.location.href = '/';
+                    } else {
+                        alert('Error al enviar el pedido: ' + (result.error || 'Error desconocido'));
+                    }
+                };
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar el pedido');
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener para el botón de enviar pedido
+            const submitBtn = document.getElementById('submitOrderBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    submitOrder();
+                });
+            }
+
+            // Event listener para cerrar el modal al hacer clic fuera
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('confirmationModal');
+                if (event.target === modal) {
+                    closeConfirmationModal();
+                }
+            });
+
+            // Calcular el total inicial
+            updateTotal();
+        });
+
+        // Event listeners para los campos editables
+        document.querySelectorAll('.editable-field input').forEach(input => {
+            input.addEventListener('change', function() {
+                updateProduct(this);
+            });
+            
+            input.addEventListener('blur', function() {
+                updateProduct(this);
+            });
+        });
+    </script>
+</body>
+</html>

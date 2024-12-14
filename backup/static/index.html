@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen del Pedido</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .cart-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-item > div {
+            flex: 1;
+        }
+        .cart-total {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: right;
+            padding: 15px;
+            border-top: 2px solid #eee;
+        }
+        .client-info {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .delete-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        .section-title {
+            color: #4CAF50;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="section-title">Resumen del Pedido</h1>
+        
+        <div id="clientInfo" class="client-info">
+            <!-- La información del cliente se insertará aquí -->
+        </div>
+
+        <h2 class="section-title">Productos</h2>
+        <div id="cart">
+            <!-- Los items del carrito se insertarán aquí -->
+        </div>
+
+        <div id="total" class="cart-total">
+            <!-- El total se insertará aquí -->
+        </div>
+
+        <button class="submit-btn" onclick="submitOrder()">Confirmar y Enviar Pedido</button>
+    </div>
+
+    <script>
+        // Cargar el pedido del localStorage al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedOrder = localStorage.getItem('currentOrder');
+            if (savedOrder) {
+                try {
+                    const orderData = JSON.parse(savedOrder);
+                    
+                    // Mostrar los productos del carrito
+                    const cartContainer = document.getElementById('cart');
+                    cartContainer.innerHTML = orderData.items.map((item, index) => `
+                        <div class="cart-item">
+                            <div>
+                                <strong>${item.name}</strong><br>
+                                Código: ${item.code}<br>
+                                Catálogo(s): ${item.catalogs.join(', ')}<br>
+                                Empaque: ${item.package}
+                            </div>
+                            <div>
+                                Cantidad: ${item.quantity}<br>
+                                Precio: $${item.price.toFixed(2)}
+                            </div>
+                            <button class="delete-btn" onclick="removeFromCart(${index})">Eliminar</button>
+                        </div>
+                    `).join('');
+
+                    // Mostrar información del cliente
+                    document.getElementById('clientInfo').innerHTML = `
+                        <h3 style="margin-top: 0;">Información del Cliente</h3>
+                        <p><strong>Nombre:</strong> ${orderData.clientName}</p>
+                        <p><strong>Zona:</strong> ${orderData.zone}</p>
+                        <p><strong>Teléfono:</strong> ${orderData.phone}</p>
+                    `;
+
+                    // Actualizar el total
+                    document.getElementById('total').textContent = `Total: $${orderData.total.toFixed(2)}`;
+                } catch (error) {
+                    console.error('Error al cargar el pedido:', error);
+                }
+            } else {
+                document.querySelector('.container').innerHTML = `
+                    <h1 class="section-title">Resumen del Pedido</h1>
+                    <p style="text-align: center; color: #666;">No hay ningún pedido pendiente</p>
+                    <button class="submit-btn" onclick="window.location.href='/'">Volver al Catálogo</button>
+                `;
+            }
+        });
+
+        function removeFromCart(index) {
+            const savedOrder = JSON.parse(localStorage.getItem('currentOrder'));
+            savedOrder.items.splice(index, 1);
+            savedOrder.total = savedOrder.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            if (savedOrder.items.length === 0) {
+                localStorage.removeItem('currentOrder');
+                window.location.href = '/';
+            } else {
+                localStorage.setItem('currentOrder', JSON.stringify(savedOrder));
+                location.reload();
+            }
+        }
+
+        async function submitOrder() {
+            const WEBHOOK_URL = 'https://hook.us2.make.com/8qetulx1rrm4hnqe19ht67ewez0qy1kk';
+            const savedOrder = JSON.parse(localStorage.getItem('currentOrder'));
+            
+            try {
+                // Convertir los datos al formato esperado por el webhook
+                const pedidosParaWebhook = savedOrder.items.map(item => {
+                    // Limpiar el número de teléfono (quitar el +58 si existe)
+                    const phoneNumber = savedOrder.phone.replace('+58', '');
+                    
+                    return {
+                        zona: savedOrder.zone,
+                        vendedora: savedOrder.clientName,
+                        catalogo: item.catalogs.join(', '),
+                        cantidad: item.quantity,
+                        empaque: item.package,
+                        codigo: item.code,
+                        producto: item.name,
+                        precio_unitario: item.price,
+                        monto_total: item.price * item.quantity,
+                        telefono: phoneNumber
+                    };
+                });
+
+                console.log('Enviando pedidos al webhook:', pedidosParaWebhook);
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(pedidosParaWebhook)
+                });
+
+                if (response.ok) {
+                    alert('¡Pedido enviado con éxito!');
+                    localStorage.removeItem('currentOrder');
+                    window.location.href = '/';
+                } else {
+                    const responseText = await response.text();
+                    throw new Error(`Error ${response.status}: ${responseText}`);
+                }
+            } catch (error) {
+                console.error('Error al enviar el pedido:', error);
+                alert('Error al enviar el pedido: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
