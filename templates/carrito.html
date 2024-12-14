@@ -285,8 +285,8 @@
 <body>
     <div class="cart-container">
         <div class="cart-header">
-            <a href="javascript:history.back()" class="back-button">
-                <i class="fas fa-arrow-left"></i> Volver
+            <a href="/catalogo" class="back-button">
+                <i class="fas fa-arrow-left"></i> Volver al catálogo
             </a>
             <h1>Carrito de Compras</h1>
         </div>
@@ -333,6 +333,7 @@
             const savedOrder = JSON.parse(localStorage.getItem('currentOrder'));
             
             if (!savedOrder) {
+                alert('No hay productos en el carrito');
                 return;
             }
 
@@ -361,12 +362,18 @@
                     body: JSON.stringify(pedidosParaWebhook)
                 });
 
-                // Ocultar el botón de envío y mostrar la sección de éxito
-                document.getElementById('submitOrderBtn').style.display = 'none';
-                document.getElementById('successSection').style.display = 'block';
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Redirigir a la página de confirmación usando una ruta absoluta
+                    window.location.href = '/confirmacion';
+                } else {
+                    throw new Error(result.message || 'Error al enviar el pedido');
+                }
 
             } catch (error) {
                 console.error('Error al enviar el pedido:', error);
+                alert('Hubo un error al enviar el pedido. Por favor, intenta de nuevo.');
             }
         }
 

@@ -30,6 +30,10 @@ def factura():
 def confirmacion():
     return render_template('confirmacion.html')
 
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
+
 @app.route('/images/<path:catalog>/<path:filename>')
 def serve_image(catalog, filename):
     return send_from_directory(os.path.join('static', 'images', catalog), filename)
@@ -50,10 +54,6 @@ def submit_order():
             
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
-
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('static', filename)
 
 if __name__ == '__main__':
     # Obtener el puerto del ambiente (Render lo proporcionará) o usar 5001 por defecto
