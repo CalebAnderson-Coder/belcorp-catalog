@@ -1,5 +1,4 @@
 Flask==3.0.0
-WeasyPrint==60.1
-imgkit==1.2.2
 gunicorn==21.2.0
 requests==2.31.0
+python-dotenv==1.0.0
