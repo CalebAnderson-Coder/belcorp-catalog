@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Catálogos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos para el modal del carrito */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        #cartIcon {
+            cursor: pointer;
+            position: relative;
+        }
+
+        #cartCount {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-submit {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">Mis Catálogos</a>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar ofertas">
+        </div>
+        <div class="nav-icons">
+            <i class="fas fa-bell"></i>
+            <div id="cartIcon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCount">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal del Carrito -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Carrito de Compras</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total">Total: $<span id="cartTotal">0</span></div>
+            <div class="input-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre">
+            </div>
+            <button class="btn-submit" onclick="submitOrder()">Enviar Pedido</button>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#">
+                    <i class="fas fa-home"></i>
+                    Inicio
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-book"></i>
+                    Catálogos
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-shopping-bag"></i>
+                    Pedido
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-gift"></i>
+                    Incentivos
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="catalogs-container">
+            <div class="catalog-header">
+                <h1>Mis catálogos</h1>
+                <div class="campaign-navigation">
+                    <span>CAMPAÑA 01</span>
+                </div>
+            </div>
+
+            <div class="catalog-section">
+                <button class="nav-button prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="catalog-grid">
+                    <div class="catalog-card">
+                        <a href="{{ url_for('catalogo', catalog='lbel') }}" class="catalog-link">
+                            <img src="{{ url_for('static', filename='images/lbel/LBEL 01-imágenes-0.jpg') }}" alt="Catálogo L'BEL" class="catalog-image">
+                            <div class="catalog-overlay">
+                                <span class="catalog-brand">L'BEL</span>
+                                <span class="catalog-campaign">Campaña 01</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="catalog-card">
+                        <a href="{{ url_for('catalogo', catalog='cyzone') }}" class="catalog-link">
+                            <img src="{{ url_for('static', filename='images/cyzone/CYZONE 01-imágenes-0.jpg') }}" alt="Catálogo Cyzone" class="catalog-image">
+                            <div class="catalog-overlay">
+                                <span class="catalog-brand">Cyzone</span>
+                                <span class="catalog-campaign">Campaña 01</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="catalog-card">
+                        <a href="{{ url_for('catalogo', catalog='esika') }}" class="catalog-link">
+                            <img src="{{ url_for('static', filename='images/esika/ESIKA 01-imágenes-0.jpg') }}" alt="Catálogo Esika" class="catalog-image">
+                            <div class="catalog-overlay">
+                                <span class="catalog-brand">Esika</span>
+                                <span class="catalog-campaign">Campaña 01</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="catalog-card">
+                        <img src="https://via.placeholder.com/300x400/7c3aed/ffffff?text=Catálogo+4" alt="Catálogo 4" class="catalog-image">
+                    </div>
+                    <div class="catalog-card">
+                        <img src="https://via.placeholder.com/300x400/7c3aed/ffffff?text=Catálogo+5" alt="Catálogo 5" class="catalog-image">
+                    </div>
+                    <div class="catalog-card">
+                        <img src="https://via.placeholder.com/300x400/7c3aed/ffffff?text=Catálogo+6" alt="Catálogo 6" class="catalog-image">
+                    </div>
+                    <div class="catalog-card">
+                        <img src="https://via.placeholder.com/300x400/7c3aed/ffffff?text=Catálogo+7" alt="Catálogo 7" class="catalog-image">
+                    </div>
+                </div>
+                <button class="nav-button next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="share-buttons">
+                <button class="share-button copy-link">
+                    <i class="fas fa-link"></i>
+                    Copiar link
+                </button>
+                <button class="share-button share-whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    Compartir por WhatsApp
+                </button>
+            </div>
+        </div>
+    </main>
+    <script>
+        // URL del webhook de Make.com
+        const WEBHOOK_URL = 'https://hook.us2.make.com/8qetulx1rrm4hnqe19ht67ewez0qy1';
+        
+        // Variables globales
+        let cart = [];
+        
+        // Función para agregar producto al carrito
+        function addToCart(catalogo, codigo, producto, precio) {
+            const item = {
+                catalogo: catalogo,
+                codigo: codigo,
+                producto: producto,
+                precio: parseFloat(precio),
+                cantidad: 1
+            };
+            
+            cart.push(item);
+            updateCartCount();
+            alert('Producto agregado al carrito');
+        }
+        
+        // Funciones del carrito
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+        
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            let total = 0;
+            
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <div>
+                        <strong>${item.producto}</strong><br>
+                        Catálogo: ${item.catalogo}<br>
+                        Código: ${item.codigo}
+                    </div>
+                    <div>
+                        Cantidad: <input type="number" value="${item.cantidad}" min="1" 
+                            onchange="updateQuantity(${index}, this.value)">
+                        Precio: $${item.precio}<br>
+                        <button onclick="removeItem(${index})">Eliminar</button>
+                    </div>
+                `;
+                cartItems.appendChild(itemDiv);
+                total += item.precio * item.cantidad;
+            });
+            
+            cartTotal.textContent = total.toFixed(2);
+        }
+        
+        function updateQuantity(index, quantity) {
+            cart[index].cantidad = parseInt(quantity);
+            updateCartDisplay();
+        }
+        
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            updateCartDisplay();
+        }
+        
+        // Modal del carrito
+        const modal = document.getElementById('cartModal');
+        const cartIcon = document.getElementById('cartIcon');
+        const closeBtn = document.querySelector('.close');
+        
+        cartIcon.onclick = function() {
+            modal.style.display = 'block';
+            updateCartDisplay();
+        }
+        
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Función para enviar el pedido
+        async function submitOrder() {
+            const nombre = document.getElementById('nombre').value;
+            if (!nombre) {
+                alert('Por favor ingresa tu nombre');
+                return;
+            }
+            if (cart.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+
+            try {
+                console.log('Enviando pedido al webhook...');
+                
+                // Crear el objeto de datos en el formato correcto
+                const pedido = {
+                    zona: "ZONA 1",
+                    vendedora: nombre,
+                    catalogo: cart[0].catalogo,
+                    cantidad: cart[0].cantidad,
+                    empaque: "Caja",
+                    codigo: cart[0].codigo,
+                    producto: cart[0].producto,
+                    precio_unitario: cart[0].precio,
+                    monto_total: cart[0].cantidad * cart[0].precio,
+                    telefono: ""
+                };
+
+                console.log('Datos a enviar:', pedido);
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify([pedido])
+                });
+
+                console.log('Respuesta del servidor:', response);
+                const responseText = await response.text();
+                console.log('Texto de respuesta:', responseText);
+
+                if (response.ok) {
+                    alert('Pedido enviado con éxito');
+                    cart = [];
+                    updateCartCount();
+                    updateCartDisplay();
+                    document.getElementById('nombre').value = '';
+                    modal.style.display = 'none';
+                } else {
+                    throw new Error(`Error ${response.status}: ${responseText}`);
+                }
+            } catch (error) {
+                console.error('Error completo:', error);
+                alert('Error al enviar el pedido: ' + error.message);
+            }
+        }
+
+        // Código existente del carrusel
+        document.addEventListener('DOMContentLoaded', function() {
+            const catalogGrid = document.querySelector('.catalog-grid');
+            const prevButton = document.querySelector('.nav-button.prev');
+            const nextButton = document.querySelector('.nav-button.next');
+            
+            // Scroll con botones
+            prevButton.addEventListener('click', () => {
+                catalogGrid.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            
+            nextButton.addEventListener('click', () => {
+                catalogGrid.scrollBy({
+                    left: 300,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Scroll con rueda del mouse
+            catalogGrid.addEventListener('wheel', (e) => {
+                if (e.deltaY !== 0) {
+                    e.preventDefault();
+                    catalogGrid.scrollLeft += e.deltaY;
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
